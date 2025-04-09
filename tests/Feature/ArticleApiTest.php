@@ -45,6 +45,52 @@ class ArticleApiTest extends TestCase
     }
 
     /**
+     * 測試根據作者獲取文章列表
+     */
+    public function test_cat_get_all_articles_by_author()
+    {
+        // 建立三篇測試文章
+        $articles = Article::factory()->count(3)->create();
+        $author = $articles->first()->author;
+        
+        // 發送請求並確認回應
+        $response = $this->getJson("/api/articles?author=$author");
+
+        // 檢查狀態碼和資料格式
+        $response->assertStatus(200)
+            ->assertJsonStructure([
+                'data' => [
+                    '*' => ['id', 'title', 'content', 'author', 'created_at', 'updated_at']
+                ],
+                'links',
+                'meta'
+            ]);
+    }
+
+    /**
+     * 測試根據作者獲取文章列表
+     */
+    public function test_cat_get_all_articles_by_title()
+    {
+        // 建立三篇測試文章
+        $articles = Article::factory()->count(3)->create();
+        $title = $articles->first()->title['zh'];
+        
+        // 發送請求並確認回應
+        $response = $this->getJson("/api/articles?title=$title");
+
+        // 檢查狀態碼和資料格式
+        $response->assertStatus(200)
+            ->assertJsonStructure([
+                'data' => [
+                    '*' => ['id', 'title', 'content', 'author', 'created_at', 'updated_at']
+                ],
+                'links',
+                'meta'
+            ]);
+    }
+
+    /**
      * 測試獲取單一文章
      */
     public function test_can_get_single_article()
