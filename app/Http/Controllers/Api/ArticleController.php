@@ -94,12 +94,12 @@ class ArticleController extends Controller
      */
     public function index(Request $request)
     {
-        $lang = $request->get('lang', 'zh'); // 預設語言為 zh
-
         $query = Article::query();
 
         if ($request->filled('title')) {
-            $query->where("title->{$lang}", 'like', '%' . $request->title . '%');
+            $query->where("title->zh", 'like', '%' . $request->title . '%')
+                ->orWhere("title->en", 'like', '%' . $request->title . '%')
+                ->orWhere("title->ja", 'like', '%' . $request->title . '%');
         }
 
         if ($request->filled('author')) {
